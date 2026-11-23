@@ -1,0 +1,18 @@
+{
+  "name": "@infinitegamer/protocol",
+  "version": "0.1.0",
+  "private": true,
+  "description": "The Infinite Gamer bridge and realtime protocols: Zod schemas shared by the SDK and the platform",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "zod": "^4.6.7"
+  }
+}

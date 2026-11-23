@@ -1,0 +1,75 @@
+{
+  "name": "@infinitegamer/sdk",
+  "version": "0.1.0",
+  "description": "The Infinite Gamer SDK: sign-in, cloud saves, leaderboards, achievements, friends, multiplayer, and analytics for web games, in the Infinite Gamer feed or on your own site",
+  "license": "MIT",
+  "type": "module",
+  "homepage": "https://infinitegamer.net/docs/sdk/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/InfiniteGamerInc/sdk-js.git",
+    "directory": "packages/sdk"
+  },
+  "bugs": "https://github.com/InfiniteGamerInc/sdk-js/issues",
+  "keywords": [
+    "web games",
+    "game sdk",
+    "leaderboards",
+    "cloud saves",
+    "html5 games",
+    "multiplayer",
+    "matchmaking",
+    "achievements",
+    "sign in"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./clips": {
+      "types": "./dist/clips.d.ts",
+      "import": "./dist/clips.js"
+    },
+    "./stage": {
+      "types": "./dist/stage.d.ts",
+      "import": "./dist/stage.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "unpkg": "./dist/ig.global.js",
+  "jsdelivr": "./dist/ig.global.js",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": [
+    "./dist/ig.global.js",
+    "./dist/ig.multiplayer.global.js",
+    "./dist/ig.clips.global.js",
+    "./dist/ig.stage.global.js",
+    "./dist/ig.mock.global.js",
+    "./dist/clips.js",
+    "./dist/stage.js"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "prepublishOnly": "npm run typecheck && npm run build"
+  },
+  "devDependencies": {
+    "@infinitegamer/protocol": "*",
+    "esbuild": "^0.28.2",
+    "happy-dom": "^20.0.0",
+    "tsup": "^8.5.0",
+    "zod": "^4.6.7"
+  }
+}
