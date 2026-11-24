@@ -82,7 +82,7 @@ export interface PlayerModule {
   identityToken(): Promise<IdentityToken>;
   /**
    * Asks the player to sign in to their Infinite Gamer account (or create one), with Google, Apple, Microsoft,
-   * Discord, Twitch, Facebook, GitHub, or an email link. The platform shows the sign-in, so your game never sees
+   * Discord, Twitch, Facebook, X, or an email link. The platform shows the sign-in, so your game never sees
    * how the player signs in. Waits until it closes. A `player.change` event follows a successful sign-in.
    *
    * @example
