@@ -22,7 +22,11 @@ export interface Player {
   locale: Locale;
 }
 
-/** Which optional features the shell offers this game. Ads and payments are `true` only when the game turns them on and the platform has them. */
+/**
+ * Which optional features the shell offers this game. Ads and payments are `true` only when the game turns them on
+ * and the platform has them. `payments` is about selling: on your own site (connected mode) it's `false`, but
+ * `IG.payments.entitlements()` and `consume()` still work there.
+ */
 export interface Features {
   multiplayer: boolean;
   ads: boolean;

@@ -571,10 +571,22 @@ describe("client-side checks", () => {
     );
     expect((await rejection(h.client.payments.catalog())).code).toBe("feature_unavailable");
     expect((await rejection(h.client.payments.purchase("gems"))).code).toBe("feature_unavailable");
-    expect((await rejection(h.client.payments.entitlements())).code).toBe("feature_unavailable");
-    expect((await rejection(h.client.payments.consume("gems"))).code).toBe("feature_unavailable");
     expect((await rejection(h.client.multiplayer.ticket())).code).toBe("feature_unavailable");
     expect(h.requests.length).toBe(before);
+  });
+
+  it("asks the shell for entitlements instead of checking features.payments", async () => {
+    h.answer = (msg) =>
+      msg.method === "handshake"
+        ? { result: HANDSHAKE }
+        : { error: { code: "feature_unavailable", message: "Not offered" } };
+    await h.client.init();
+    expect((await rejection(h.client.payments.entitlements())).code).toBe("feature_unavailable");
+    expect((await rejection(h.client.payments.consume("gems"))).code).toBe("feature_unavailable");
+    expect(h.requests.map((r) => r.method).slice(-2)).toEqual([
+      "payments.entitlements",
+      "payments.consume",
+    ]);
   });
 
   it("forwards later-phase calls once the shell offers them", async () => {

@@ -206,9 +206,15 @@ export interface PaymentsModule {
   catalog(): Promise<Product[]>;
   /** Asks the player to buy a product in the shell's purchase sheet. Waits for the sheet to close. */
   purchase(product: string): Promise<PurchaseResult>;
-  /** Products the player owns, including unconsumed consumables. */
+  /**
+   * Products the player owns, including unconsumed consumables. Unlike {@link PaymentsModule.purchase}, this also
+   * works on your own site (connected mode), where guests own nothing.
+   */
   entitlements(): Promise<Entitlement[]>;
-  /** Uses up owned consumables (default 1). Rejects with `conflict` when the player has fewer. */
+  /**
+   * Uses up owned consumables (default 1). Rejects with `conflict` when the player has fewer. Also works on your own
+   * site (connected mode) for signed-in players.
+   */
   consume(product: string, quantity?: number): Promise<{ remaining: number }>;
 }
 
@@ -584,12 +590,8 @@ export class IgClient {
         checkId("product", product);
         return call("payments.purchase", { product });
       },
-      entitlements: async () => {
-        await this.requireFeature("payments", "Payments");
-        return (await call("payments.entitlements", {})).entitlements;
-      },
+      entitlements: async () => (await call("payments.entitlements", {})).entitlements,
       consume: async (product, quantity = 1) => {
-        await this.requireFeature("payments", "Payments");
         checkId("product", product);
         return call("payments.consume", { product, quantity });
       },

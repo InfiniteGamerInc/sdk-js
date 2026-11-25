@@ -199,7 +199,27 @@ describe("connected mode", () => {
     const c = connectedClient();
     await c.init({ gameId: GAME, platformOrigin: PLATFORM });
     expect(await code(c.payments.catalog())).toBe("feature_unavailable");
+    expect(await code(c.payments.purchase("gems"))).toBe("feature_unavailable");
     expect(await code(c.feedback.open())).toBe("feature_unavailable");
+  });
+
+  it("reads and consumes what the player bought on Infinite Gamer", async () => {
+    const guest = connectedClient();
+    await guest.init({ gameId: GAME, platformOrigin: PLATFORM });
+    expect(await guest.payments.entitlements()).toEqual([]);
+    expect(await code(guest.payments.consume("gems"))).toBe("unauthenticated");
+    expect(calls).toEqual([]);
+
+    signedInRoutes();
+    const owned = [{ product: "gems", quantity: 3, grantedAt: "2026-11-20T10:00:00.000Z" }];
+    routes[`GET ${API}/entitlements`] = () => ({ body: { entitlements: owned } });
+    routes[`POST ${API}/entitlements/consume`] = () => ({ body: { remaining: 1 } });
+    window.localStorage.setItem(`ig:${GAME}:refresh`, "rt_stored");
+    const c = connectedClient();
+    await c.init({ gameId: GAME, platformOrigin: PLATFORM });
+    expect(await c.payments.entitlements()).toEqual(owned);
+    expect(await c.payments.consume("gems", 2)).toEqual({ remaining: 1 });
+    expect(calls.at(-1)).toMatchObject({ method: "POST", auth: "Bearer igp_access", body: { product: "gems", quantity: 2 } });
   });
 
   it("uses mock mode without a gameId, where signOut isn't available", async () => {

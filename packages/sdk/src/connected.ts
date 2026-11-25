@@ -463,6 +463,9 @@ export class ConnectedBackend implements Backend {
       "friends.request": (p) => this.call("/friends/requests", post(p)),
 
       "remoteConfig.get": () => this.call(`/remote-config/resolved${query({ locale: this.opts.locale })}`, { guest: true }),
+
+      "payments.entitlements": () => (guest() ? { entitlements: [] } : this.call("/entitlements")),
+      "payments.consume": (p) => this.call("/entitlements/consume", post({ product: p.product, quantity: p.quantity })),
     };
   }
 }
